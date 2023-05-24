@@ -3,13 +3,9 @@ import pyttsx3
 import sys
 import time
 import speech_recognition as sr
-import customtkinter as ctk
 import threading
 
-
-openai.api_key = 'INSERT KEY'
-
-
+openai.api_key = ''
 engine = pyttsx3.init()
 
 
@@ -36,12 +32,13 @@ def generate_response(prompt):
     return response["choices"][0]["text"]
 
 
-def speak_text(text):
+def text_to_speech(text):
     engine.say(text)
     engine.runAndWait()
 
 
-def main():
+def assistant():
+
     while True:
         print("Say 'Bruce' to ask your question...")
 
@@ -53,7 +50,7 @@ def main():
                 transcription = recognizer.recognize_google(audio)
                 if transcription.lower() == "bruce":
                     filename = "question.wav"
-                    print("Yes...")
+                    text_to_speech("Yes...")
                     with sr.Microphone() as source:
                         recognizer = sr.Recognizer()
                         source.pause_threshold = 1
@@ -67,7 +64,7 @@ def main():
                         sys.exit()
                     if text == "what's your name":
                         assistant_name = "my name is Bruce Mclaren"
-                        speak_text(assistant_name)
+                        text_to_speech(assistant_name)
 
                     if text:
                         print(f'You said: {text}')
@@ -75,28 +72,12 @@ def main():
                         response = generate_response(text)
                         print(f'Bruce: {response}')
 
-                        speak_text(response)
+                        text_to_speech(response)
                 if transcription.lower() == "what's your name":
                     name = "my name is Bruce Mclaren"
-                    speak_text(name)
+                    text_to_speech(name)
                 if transcription.lower() == "goodbye bruce":
                     sys.exit()
 
             except Exception as e:
                 print()
-
-
-class mainWindow(main):
-    root = ctk.CTk()
-    root.geometry("750x450")
-    root.title("Bruce Assistant App")
-
-    title_label = ctk.CTkLabel(
-        root, text="Bruce", font=ctk.CTkFont(size=30, weight="bold"))
-    title_label.pack(padx=10, pady=(40, 20))
-
-    frame = ctk.CTkScrollableFrame(root, width=500, height=200)
-    frame.pack()
-
-    root.mainloop()
-    main()
