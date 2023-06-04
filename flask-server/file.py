@@ -10,7 +10,7 @@ class VirtualAssistant:
 
     def __init__(self):
         
-        openai.api_key = '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'
+        openai.api_key = '######'
 
 
         engine = pyttsx3.init()
